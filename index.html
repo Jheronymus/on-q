@@ -11,14 +11,49 @@
     <script src="bower_components/angular-material/angular-material.min.js"></script>
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body ng-app="onq">
+    <script type="text/ng-template" id="editSettingsDialogTemplate">
+        <md-dialog style="width: 400px">
+            <md-dialog-content class="md-dialog-content">
+                <h2 class="md-title">
+                    Settings
+                </h2>
+                <md-input-container>
+                    <label>Host</label>
+                    <input type="text" ng-model="$storage.settings.host" />
+                </md-input-container>
+                <md-input-container>
+                    <label>Input node</label>
+                    <input type="text" ng-model="$storage.settings.nodeIn" />
+                </md-input-container>
+                <md-input-container>
+                    <label>Output node</label>
+                    <input type="text" ng-model="$storage.settings.nodeOut" />
+                </md-input-container>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button ng-click="hide()">
+                    Cancel
+                </md-button>
+                <md-button ng-click="answer(settings)">
+                    Ok
+                </md-button>
+            </md-dialog-actions>
+        </md-dialog>
+    </script>
     <div class="content" ng-controller="queueController">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>
                     <span>ON-Q</span>
                 </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" aria-label="settings" ng-click="editSettingsDlg()">
+                    <md-icon>settings</md-icon>
+                </md-button>
             </div>
         </md-toolbar>
         <md-tabs md-dynamic-height md-border-bottom>
@@ -37,14 +72,6 @@
             <md-tab>
         </md-tabs>
     </div>
-
-    <script>
-        var config = {
-            wsHost: 'ws://localhost:13900',
-            mserverNodeIn: 'overlay',
-            mserverNodeOut: 'default'
-        };
-    </script>
     <script src="js/main.js"></script>
 </body>
 </html>
