@@ -134,6 +134,13 @@ angular.module('onq',['ngMaterial','ngStorage'])
             });
         }
 
+        $scope.isString = function(obj) {
+            return angular.isString(obj);
+        }
+        $scope.isObject = function(obj) {
+            return angular.isObject(obj);
+        }
+
         $scope.isJSON = function(str) {
             try {
                 JSON.parse(str);

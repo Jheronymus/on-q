@@ -117,7 +117,8 @@
                     <md-card ng-repeat="message in messages">
                         <md-card-content>
                             <div class="md-chips">
-                                <div class="md-chip" ng-repeat="(key,val) in message.data track by $index">{{key}}: {{val}}</div>
+                                <div ng-if="isObject(message.data)" class="md-chip" ng-repeat="(key,val) in message.data track by $index">{{key}}: {{val}}</div>
+                                <div ng-if="isString(message.data)" class="md-chip" >{{message.data}}</div>
                             </div>
                         </md-card-content>
                         <md-card-actions layout="row" layout-align="end center">
