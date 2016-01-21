@@ -10,9 +10,18 @@
     <script src="bower_components/angular-messages/angular-messages.min.js"></script>
     <script src="bower_components/angular-material/angular-material.min.js"></script>
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .md-chip {
+            background: rgb(224,224,224);
+            color: rgb(66,66,66);
+        }
+        md-toolbar.offline {
+            background-color: #444;
+        }
+    </style>
 </head>
 <body ng-app="onq">
     <script type="text/ng-template" id="editSettingsDialogTemplate">
@@ -38,30 +47,38 @@
                 <md-button ng-click="hide()">
                     Cancel
                 </md-button>
-                <md-button ng-click="answer(settings)">
+                <md-button ng-click="answer($storage.settings)">
                     Ok
                 </md-button>
             </md-dialog-actions>
         </md-dialog>
     </script>
     <div class="content" ng-controller="queueController">
-        <md-toolbar>
+        <md-toolbar ng-class="{offline: !connected}">
             <div class="md-toolbar-tools">
                 <h2>
                     <span>ON-Q</span>
                 </h2>
                 <span flex></span>
+                <md-button class="md-icon-button" aria-label="reconnect" ng-if="connected">
+                    <md-icon>network_wifi</md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-warn" aria-label="reconnect" ng-if="!connected" ng-click="connect()">
+                    <md-icon>perm_scan_wifi</md-icon>
+                </md-button>
                 <md-button class="md-icon-button" aria-label="settings" ng-click="editSettingsDlg()">
                     <md-icon>settings</md-icon>
                 </md-button>
             </div>
         </md-toolbar>
         <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab ng-repeat="(topic,messages) in $storage.topics" label="{{topic}} ({{messages.length}})">
+            <md-tab ng-repeat="(topic,messages) in $storage.topics track by $index" label="{{topic}} ({{messages.length}})">
                 <md-content>
                     <md-card ng-repeat="message in messages">
                         <md-card-content>
-                            {{message.data}}
+                            <div class="md-chips">
+                                <div class="md-chip" ng-repeat="(key,val) in message.data">{{key}}:{{val}}</div>
+                            </div>
                         </md-card-content>
                         <md-card-actions layout="row" layout-align="end center">
                             <md-button ng-click="forward(message)">Forward</md-button>

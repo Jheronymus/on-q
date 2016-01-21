@@ -1,26 +1,3 @@
-function initWebsocket(config) {
-    var ws;
-    console.log(config);
-    if (config.host) {
-        ws = new WebSocket(config.host);
-        ws.onopen = function() {
-            if (config.nodeIn) {
-                ws.send(JSON.stringify({
-                    type: "subscribe",
-                    node: config.nodeIn
-                }));
-            }
-        };
-        ws.onerror = function(e){
-            console.log("error", e);
-        };
-        ws.onclose = function() {
-            console.log("close");
-        };
-    }
-
-    return ws;
-}
 
 
 angular.module('onq',['ngMaterial','ngStorage'])
@@ -38,8 +15,62 @@ angular.module('onq',['ngMaterial','ngStorage'])
         };
     }
 ]).controller('queueController',[
-    '$scope','$localStorage','$mdDialog',
-    function($scope,$localStorage,$mdDialog) {
+    '$scope','$localStorage','$mdDialog','$timeout',
+    function($scope,$localStorage,$mdDialog,$timeout) {
+        $scope.connected = false;
+        var backoff = 100;
+        var maxBackoff = 5000;
+        var pendingConnection;
+
+        function initWebsocket(config) {
+            var ws;
+            if (config.host) {
+                if (pendingConnection) {
+                    $timeout.cancel(pendingConnection);
+                }
+                ws = new WebSocket(config.host);
+
+                ws.onopen = function() {
+                    if (config.nodeIn) {
+                        ws.send(JSON.stringify({
+                            type: "subscribe",
+                            node: config.nodeIn
+                        }));
+                        $scope.connected = true;
+                        backoff = 100;
+                    }
+                    $scope.$digest();
+                };
+                ws.onerror = function(e){
+                    console.log("error");
+                    ws.close();
+                };
+                ws.onclose = function() {
+                    console.log("close reconnecting in",backoff,'ms');
+                    $scope.connected = false;
+                    $scope.$digest();
+                    pendingConnection = $timeout($scope.connect,backoff);
+                    backoff = Math.min(maxBackoff,backoff * 2);
+                };
+                ws.onmessage = function(msg) {
+                    var data = JSON.parse(msg.data);
+                    if (data.topic) {
+                        if (!$scope.$storage.topics[data.topic]) {
+                            $scope.$storage.topics[data.topic] = [];
+                        }
+                        $scope.$storage.topics[data.topic].push(data);
+                    }
+                    $scope.$digest();
+                };
+            }
+
+            return ws;
+        }
+
+        $scope.connect = function() {
+            $scope.ws = initWebsocket($scope.$storage.settings);
+        };
+
         $scope.$storage = $localStorage.$default({
             topics: {},
             settings: {
@@ -49,16 +80,9 @@ angular.module('onq',['ngMaterial','ngStorage'])
             }
         });
 
-        $scope.ws = initWebsocket($scope.$storage.settings);
+        $scope.connect();
 
-        $scope.ws.onmessage = function(msg) {
-            var data = JSON.parse(msg.data);
-            if (!$scope.$storage.topics[data.topic]) {
-                $scope.$storage.topics[data.topic] = [];
-            }
-            $scope.$storage.topics[data.topic].push(data);
-            $scope.$digest();
-        };
+
 
         $scope.forward = function(message) {
             $scope.ws.send(JSON.stringify({
@@ -86,7 +110,7 @@ angular.module('onq',['ngMaterial','ngStorage'])
                 scope: $scope.$new()
             }).then(function(result) {
                 if (result) {
-                    console.log(result);
+                    $scope.ws.close();
                 }
             });
         }
