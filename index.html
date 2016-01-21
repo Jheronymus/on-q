@@ -11,6 +11,7 @@
     <script src="bower_components/angular-messages/angular-messages.min.js"></script>
     <script src="bower_components/angular-material/angular-material.min.js"></script>
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="bower_components/js-yaml/dist/js-yaml.min.js"></script>
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -22,6 +23,10 @@
         md-toolbar.offline {
             background-color: #444;
         }
+        md-input-container.md-icon-right {
+            padding-right: 36px;
+            padding-left: 2px;
+        }
     </style>
 </head>
 <body ng-app="onq">
@@ -31,15 +36,15 @@
                 <h2 class="md-title">
                     Settings
                 </h2>
-                <md-input-container>
+                <md-input-container class="md-block">
                     <label>Host</label>
                     <input type="text" ng-model="$storage.settings.host" />
                 </md-input-container>
-                <md-input-container>
+                <md-input-container class="md-block">
                     <label>Input node</label>
                     <input type="text" ng-model="$storage.settings.nodeIn" />
                 </md-input-container>
-                <md-input-container>
+                <md-input-container class="md-block">
                     <label>Output node</label>
                     <input type="text" ng-model="$storage.settings.nodeOut" />
                 </md-input-container>
@@ -49,6 +54,40 @@
                     Cancel
                 </md-button>
                 <md-button ng-click="answer($storage.settings)">
+                    Ok
+                </md-button>
+            </md-dialog-actions>
+        </md-dialog>
+    </script>
+    <script type="text/ng-template" id="addMessageDialogTemplate">
+        <md-dialog style="width: 400px">
+            <md-dialog-content class="md-dialog-content">
+                <h2 class="md-title">
+                    Add message
+                </h2>
+                <p>
+                    You can type yaml in the data field
+                </p>
+                <md-input-container class="md-block">
+                    <label>Topic</label>
+                    <input type="text" ng-model="message.topic" />
+                </md-input-container>
+                <div layout="row">
+                    <md-input-container flex class="md-block md-icon-right">
+                        <label>Data (yaml)</label>
+                        <textarea ng-model="message.yaml"></textarea>
+                        <md-icon ng-if="isJSON(message.data)">code</md-icon>
+                    </md-input-container>
+                    <div flex>
+                        <pre>{{message.data | json}}</pre>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button ng-click="hide()">
+                    Cancel
+                </md-button>
+                <md-button ng-click="answer(message)">
                     Ok
                 </md-button>
             </md-dialog-actions>
@@ -78,7 +117,7 @@
                     <md-card ng-repeat="message in messages">
                         <md-card-content>
                             <div class="md-chips">
-                                <div class="md-chip" ng-repeat="(key,val) in message.data">{{key}}:{{val}}</div>
+                                <div class="md-chip" ng-repeat="(key,val) in message.data track by $index">{{key}}: {{val}}</div>
                             </div>
                         </md-card-content>
                         <md-card-actions layout="row" layout-align="end center">
@@ -89,6 +128,9 @@
                 </md-content>
             <md-tab>
         </md-tabs>
+        <md-button class="md-accent md-fab md-fab-bottom-right" style="position: fixed" ng-click="addMessageDlg()">
+            <md-icon>add</md-icon>
+        </md-button>
     </div>
     <script src="js/main.js"></script>
 </body>

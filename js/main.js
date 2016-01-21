@@ -1,7 +1,24 @@
 
 
 angular.module('onq',['ngMaterial','ngStorage'])
-.controller('settingsDialogController', [
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue')
+    .accentPalette('light-green');
+}).controller('settingsDialogController', [
+    '$scope', '$mdDialog',
+    function($scope,$mdDialog) {
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.answer = function(answer) {
+            $mdDialog.hide(answer);
+        };
+    }
+]).controller('messageDialogController', [
     '$scope', '$mdDialog',
     function($scope,$mdDialog) {
         $scope.hide = function() {
@@ -55,10 +72,7 @@ angular.module('onq',['ngMaterial','ngStorage'])
                 ws.onmessage = function(msg) {
                     var data = JSON.parse(msg.data);
                     if (data.topic) {
-                        if (!$scope.$storage.topics[data.topic]) {
-                            $scope.$storage.topics[data.topic] = [];
-                        }
-                        $scope.$storage.topics[data.topic].push(data);
+                        $scope.enqueue(data);
                     }
                     $scope.$digest();
                 };
@@ -82,7 +96,12 @@ angular.module('onq',['ngMaterial','ngStorage'])
 
         $scope.connect();
 
-
+        $scope.enqueue = function(message) {
+            if (!$scope.$storage.topics[message.topic]) {
+                $scope.$storage.topics[message.topic] = [];
+            }
+            $scope.$storage.topics[message.topic].push(message);
+        }
 
         $scope.forward = function(message) {
             $scope.ws.send(JSON.stringify({
@@ -111,6 +130,39 @@ angular.module('onq',['ngMaterial','ngStorage'])
             }).then(function(result) {
                 if (result) {
                     $scope.ws.close();
+                }
+            });
+        }
+
+        $scope.isJSON = function(str) {
+            try {
+                JSON.parse(str);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        $scope.$watch('message.yaml',function(newValue) {
+            if ($scope.message) {
+                try {
+                    $scope.message.data = jsyaml.safeLoad(newValue);
+                } catch(e) {
+                    $scope.message.data = newValue;
+                }
+            }
+        });
+
+        $scope.addMessageDlg = function() {
+            $scope.message = {yaml:''};
+            return $mdDialog.show({
+                parent: angular.element(document.body),
+                templateUrl: 'addMessageDialogTemplate',
+                controller: 'messageDialogController',
+                scope: $scope.$new()
+            }).then(function(result) {
+                if (result) {
+                    $scope.enqueue(result);
                 }
             });
         }
