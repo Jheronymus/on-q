@@ -11,6 +11,8 @@ See it working at http://firstlegoleague.github.io/on-q. It listens to your loca
 - Configure your mhub server to route messages you want to cue to the input node for On-Q.
 - Configure your mhub server to route messages from the output node for On-Q to the destinations you desire.
 
+As an alternative for setting up the configuration from the user interface, you can also modify the config.js file *before* launching the application for the first time.
+
 ## Example mhub configuration
 
 Example for use in [FIRST LEGO League National Finals](https://github.com/FirstLegoLeague/General-IT/wiki/Scenarios#national-finals)

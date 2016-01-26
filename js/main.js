@@ -87,11 +87,7 @@ angular.module('onq',['ngMaterial','ngStorage'])
 
         $scope.$storage = $localStorage.$default({
             topics: {},
-            settings: {
-                host: 'ws://localhost:13900',
-                nodeIn: 'onq-in',
-                nodeOut: 'onq-out'
-            }
+            settings: onqConfig
         });
 
         $scope.connect();
