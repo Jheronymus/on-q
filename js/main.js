@@ -117,6 +117,10 @@ angular.module('onq',['ngMaterial','ngStorage'])
             }
         };
 
+        $scope.declineAll = function(topic) {
+            delete $scope.$storage.topics[topic];
+        }
+
         $scope.editSettingsDlg = function() {
             return $mdDialog.show({
                 parent: angular.element(document.body),
