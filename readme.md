@@ -6,6 +6,8 @@ See it working at http://firstlegoleague.github.io/on-q. It listens to your loca
 
 ## Usage
 
+For detailed, walk-through instructions, see below
+
 - Adjust the settings in the settings dialog by pressing the gear icon.
 - Point to the correct mhub server and nodes
 - Configure your mhub server to route messages you want to cue to the input node for On-Q.
@@ -28,7 +30,7 @@ Example for use in [FIRST LEGO League National Finals](https://github.com/FirstL
 
 For more information see [the MHub documentation](https://github.com/poelstra/mhub)
 
-## Example setup
+## Example setup walk-through
 
 - change `server.conf.json` in your mserver as per the above
 - start mserver by typing `mserver`
