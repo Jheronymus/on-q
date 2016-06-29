@@ -13,7 +13,7 @@ See it working at http://firstlegoleague.github.io/on-q. It listens to your loca
 
 As an alternative for setting up the configuration from the user interface, you can also modify the config.js file *before* launching the application for the first time.
 
-## Example mhub configuration
+## Example mhub configuration (`server.conf.json`)
 
 Example for use in [FIRST LEGO League National Finals](https://github.com/FirstLegoLeague/General-IT/wiki/Scenarios#national-finals)
 
@@ -27,3 +27,32 @@ Example for use in [FIRST LEGO League National Finals](https://github.com/FirstL
 	}
 
 For more information see [the MHub documentation](https://github.com/poelstra/mhub)
+
+## Example setup
+
+- change `server.conf.json` in your mserver as per the above
+- start mserver by typing `mserver`
+- go to http://firstlegoleague.github.io/on-q the top bar should be blue, indicating it is connected
+- if the top bar is grey, there is a connection error. Check the settings (gear icon). It should be like:
+  - host: `ws://localhost:13900` (this should match the port in your mserver configuration)
+  - input node: `onq-in` (this should match the nodes in your mserver configuration)
+  - output node: `onq-out` (this should match the nodes in your mserver configuration)
+
+### capturing messages
+
+- send any message to the `onq-in` node. For example by typing in the command line: `mclient -n onq-in -t test -d '["hello","there"]'`
+- note the message appear in the interface. Note that topics are grouped in tabs. In this case `test`.
+- press `forward` to forward the message to the `onq-out` node. Note that it appears in the mserver log
+
+### ad hoc publishing
+
+- create a new message by pressing the (+) button
+- enter a topic, like `test`
+- enter some data, like
+
+        - hello
+        - world
+      
+- press ok
+
+The message is added. Note that topics are grouped in tabs. You can now forward the message by pressing `forward`. It should be displayed in the mserver log
