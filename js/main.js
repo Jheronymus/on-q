@@ -121,6 +121,10 @@ angular.module('onq',['ngMaterial','ngStorage'])
             delete $scope.$storage.topics[topic];
         }
 
+        $scope.noTopics = function() {
+            return !Object.keys($scope.$storage.topics).length;
+        }
+
         $scope.editSettingsDlg = function() {
             return $mdDialog.show({
                 parent: angular.element(document.body),

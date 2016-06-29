@@ -33,6 +33,11 @@
             white-space: nowrap;
             overflow: hidden;
         }
+        .noTopics {
+            text-align: center;
+            color: silver;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body ng-app="onq">
@@ -143,6 +148,12 @@
                 </md-tab-body>
             <md-tab>
         </md-tabs>
+        <div class="noTopics" ng-if="noTopics()">
+            <p>There are no messages here yet</p>
+            <p>Add by pressing the (+) button or by sending some messages over the bus:</p>
+            <p><code>mclient -n onq-in -t test -d "[""hello"",""world""]"</code> (windows)</p>
+            <p><code>mclient -n onq-in -t test -d '["hello","world"]'</code> (linux)</p>
+        </div>
         <md-button class="md-accent md-fab md-fab-bottom-right" style="position: fixed" ng-click="addMessageDlg()">
             <md-icon>add</md-icon>
         </md-button>
