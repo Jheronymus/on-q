@@ -58,3 +58,12 @@ For more information see [the MHub documentation](https://github.com/poelstra/mh
 - press ok
 
 The message is added. Note that topics are grouped in tabs. You can now forward the message by pressing `forward`. It should be displayed in the mserver log
+
+## Local installation
+
+- install nodejs from <https://nodejs.org/>
+- open a command window (from the start menu, type `cmd` and press enter)
+- open the folder where you downloaded on-q (in the command window)
+- type `npm install`
+- type `npm start`
+- you can now open the application by navigating to <http://localhost:1393>

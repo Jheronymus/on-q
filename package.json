@@ -1,0 +1,22 @@
+{
+  "name": "on-q",
+  "version": "1.0.0",
+  "description": "MHub hold-and-release tool. Listens to messages on a queue, lists them and sends them on another node on your cue.",
+  "main": "config.js",
+  "scripts": {
+    "start": "node_modules/node-static/bin/cli.js -a 0.0.0.0 -p 1393 ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FirstLegoLeague/on-q.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FirstLegoLeague/on-q/issues"
+  },
+  "homepage": "https://github.com/FirstLegoLeague/on-q#readme",
+  "dependencies": {
+    "node-static": "^0.7.7"
+  }
+}
