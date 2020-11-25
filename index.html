@@ -38,6 +38,13 @@
             color: silver;
             font-size: 20px;
         }
+        pre {
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap;  /* Mozilla */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        }
     </style>
 </head>
 <body ng-app="onq">
@@ -71,7 +78,7 @@
         </md-dialog>
     </script>
     <script type="text/ng-template" id="addMessageDialogTemplate">
-        <md-dialog style="width: 400px">
+        <md-dialog style="width: 70%">
             <md-dialog-content class="md-dialog-content">
                 <h2 class="md-title">
                     Add message
@@ -84,12 +91,12 @@
                     <input type="text" ng-model="message.topic" />
                 </md-input-container>
                 <div layout="row">
-                    <md-input-container flex class="md-block md-icon-right">
+                    <md-input-container flex="40" class="md-block md-icon-right">
                         <label>Data (yaml)</label>
                         <textarea ng-model="message.yaml"></textarea>
                         <md-icon ng-if="isJSON(message.data)">code</md-icon>
                     </md-input-container>
-                    <div flex>
+                    <div flex="60">
                         <pre>{{message.data | json}}</pre>
                     </div>
                 </div>
