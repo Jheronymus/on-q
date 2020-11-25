@@ -2,7 +2,7 @@
 
 MHub hold-and-release tool. Listens to messages on a queue, lists them and sends them on another node on your cue.
 
-See it working at http://firstlegoleague.github.io/on-q. It listens to your localhost.
+See it working at http://jheronymus.github.io/on-q. It listens to your localhost.
 
 ## Usage
 
@@ -34,7 +34,7 @@ For more information see [the MHub documentation](https://github.com/poelstra/mh
 
 - change `server.conf.json` in your mserver as per the above
 - start mserver by typing `mserver`
-- go to http://firstlegoleague.github.io/on-q the top bar should be blue, indicating it is connected
+- go to http://jheronymus.github.io/on-q the top bar should be blue, indicating it is connected
 - if the top bar is grey, there is a connection error. Check the settings (gear icon). It should be like:
   - host: `ws://localhost:13900` (this should match the port in your mserver configuration)
   - input node: `onq-in` (this should match the nodes in your mserver configuration)
