@@ -48,6 +48,7 @@
     </style>
 </head>
 <body ng-app="onq">
+    <!-- Settings dialog -->
     <script type="text/ng-template" id="editSettingsDialogTemplate">
         <md-dialog style="width: 400px">
             <md-dialog-content class="md-dialog-content">
@@ -77,6 +78,7 @@
             </md-dialog-actions>
         </md-dialog>
     </script>
+    <!-- Message dialog -->
     <script type="text/ng-template" id="addMessageDialogTemplate">
         <md-dialog style="width: 70%">
             <md-dialog-content class="md-dialog-content">
@@ -87,13 +89,17 @@
                     You can type yaml in the data field
                 </p>
                 <md-input-container class="md-block">
+                    <label>Keep</label>
+                    <input type="checkbox" ng-model="message.headerkeep" />
+                </md-input-container>
+                <md-input-container class="md-block">
                     <label>Topic</label>
-                    <input type="text" ng-model="message.topic" />
+                    <input type="text" ng-model="message.topic"  />
                 </md-input-container>
                 <div layout="row">
                     <md-input-container flex="40" class="md-block md-icon-right">
                         <label>Data (yaml)</label>
-                        <textarea ng-model="message.yaml"></textarea>
+                        <textarea ng-model="message.yaml"  md-autofocus=""></textarea>
                         <md-icon ng-if="isJSON(message.data)">code</md-icon>
                     </md-input-container>
                     <div flex="60">
@@ -112,6 +118,7 @@
         </md-dialog>
     </script>
     <div class="content" ng-controller="queueController">
+        <!-- Toolbar -->
         <md-toolbar ng-class="{offline: !connected}">
             <div class="md-toolbar-tools">
                 <h2>
@@ -129,6 +136,7 @@
                 </md-button>
             </div>
         </md-toolbar>
+        <!-- Topic tabs -->
         <md-tabs md-dynamic-height md-border-bottom>
             <md-tab ng-repeat="(topic,messages) in $storage.topics track by $index">
                 <md-tab-label>
@@ -152,18 +160,27 @@
                             <md-button class="md-warn" ng-click="decline(message)">Decline</md-button>
                         </md-card-actions>
                     </md-card>
+                    <md-button class="md-accent md-fab md-fab-bottom-right" style="position: fixed" ng-click="addMessageDlg(topic)">
+                        <md-icon>add</md-icon>
+                    </md-button>
                 </md-tab-body>
+            </md-tab>
             <md-tab>
+                <md-tab-label>
+                    <md-button class="md-icon-button md-primary" aria-label="Add topic" ng-click="addMessageDlg()">
+                        <md-icon>add</md-icon>
+                    </md-button>
+                </md-tab-label>
+                <md-tab-body class="noTopics">
+                    <div class="noTopics" ng-if="noTopics()">
+                        <p>There are no messages here yet</p>
+                        <p>Add by pressing the (+) button or by sending some messages over the bus:</p>
+                        <p><code>mclient -n onq-in -t test -d "[""hello"",""world""]"</code> (windows)</p>
+                        <p><code>mclient -n onq-in -t test -d '["hello","world"]'</code> (linux)</p>
+                </div>
+                </md-tab-body>
+            </md-tab>
         </md-tabs>
-        <div class="noTopics" ng-if="noTopics()">
-            <p>There are no messages here yet</p>
-            <p>Add by pressing the (+) button or by sending some messages over the bus:</p>
-            <p><code>mclient -n onq-in -t test -d "[""hello"",""world""]"</code> (windows)</p>
-            <p><code>mclient -n onq-in -t test -d '["hello","world"]'</code> (linux)</p>
-        </div>
-        <md-button class="md-accent md-fab md-fab-bottom-right" style="position: fixed" ng-click="addMessageDlg()">
-            <md-icon>add</md-icon>
-        </md-button>
     </div>
     <script src="js/main.js"></script>
 </body>

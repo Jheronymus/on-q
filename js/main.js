@@ -19,8 +19,9 @@ angular.module('onq',['ngMaterial','ngStorage'])
         };
     }
 ]).controller('messageDialogController', [
-    '$scope', '$mdDialog',
-    function($scope,$mdDialog) {
+    '$scope', '$mdDialog', 'topic',
+    function($scope,$mdDialog,topic) {
+        $scope.message.topic = topic;
         $scope.hide = function() {
             $mdDialog.hide();
         };
@@ -104,7 +105,10 @@ angular.module('onq',['ngMaterial','ngStorage'])
                 type: "publish",
                 node: $scope.$storage.settings.nodeOut,
                 topic: message.topic,
-                data: message.data
+                data: message.data,
+                headers: {
+                    keep: message.headerkeep
+                }
             }));
         }
 
@@ -164,13 +168,18 @@ angular.module('onq',['ngMaterial','ngStorage'])
             }
         });
 
-        $scope.addMessageDlg = function() {
+        $scope.addMessageDlg = function(topicName) {
             $scope.message = {yaml:''};
             return $mdDialog.show({
                 parent: angular.element(document.body),
                 templateUrl: 'addMessageDialogTemplate',
                 controller: 'messageDialogController',
-                scope: $scope.$new()
+                scope: $scope.$new(),
+                resolve: {
+                    topic: function(){
+                        return topicName;
+                    }
+                }
             }).then(function(result) {
                 if (result) {
                     $scope.enqueue(result);
